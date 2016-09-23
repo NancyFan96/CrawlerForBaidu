@@ -105,7 +105,10 @@ public class Crawler4BD {
         Connection connection = Jsoup.connect(url).userAgent(USER_AGENT);
         Document doc = connection.get();
 
-		Elements links = doc.select("a[data-click]");// 摘取该页搜索链接
+        //Elements links = doc.select("a[data-click]");// 摘取该页搜索链接
+        Elements links = doc.getElementsByClass("result");
+        links = links.select("h3[class]").select("a[data-click]");
+        System.out.println("#########"+links.size()+"############");
 		return links;
 	}
 
@@ -115,9 +118,11 @@ public class Crawler4BD {
 	 */
 	public static void doCrawler(Elements URLsOnAPage){
 		for(Element newlink:URLsOnAPage){
+			//System.out.println(newlink);		
 			String linkHref = newlink.attr("href");// 提取包含“href”的元素成分，JSoup实现内部具体过程
 			String linkText = newlink.text();// 声明变量用于保存每个链接的摘要
-			if (linkText.length() > 4 && linkText.contains(keyW)) {// 去除某些无效链接
+			//System.out.println("##########Text："+linkText+"###############\n"+linkHref);		
+			if (linkHref.length()>0){//linkText.length() > 4 && linkText.contains(keyW)) {// 去除某些无效链接
 				System.out.println("标题："+linkText + "\n链接：" + linkHref);
 				eachurl.add(linkHref);
 			}
